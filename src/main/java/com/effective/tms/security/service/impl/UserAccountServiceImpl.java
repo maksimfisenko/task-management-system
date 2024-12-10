@@ -5,6 +5,8 @@ import com.effective.tms.security.repository.UserAccountRepository;
 import com.effective.tms.security.service.UserAccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 
@@ -20,5 +22,10 @@ public class UserAccountServiceImpl implements UserAccountService {
             throw new RuntimeException("Account with this username already exists");
         }
         userAccountRepository.save(userAccount);
+    }
+
+    @Override
+    public Optional<UserAccount> findUserByUsername(String username) {
+        return userAccountRepository.findByUsername(username);
     }
 }

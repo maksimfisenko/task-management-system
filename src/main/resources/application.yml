@@ -6,3 +6,8 @@ spring:
     password: tms_password
   jpa:
     open-in-view: false
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
