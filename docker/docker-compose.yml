@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "tms"
+      POSTGRES_USER: "tms_user"
+      POSTGRES_PASSWORD: "tms_password"
+    ports:
+      - "5432:5432"
