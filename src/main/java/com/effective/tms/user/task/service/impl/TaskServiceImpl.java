@@ -1,10 +1,12 @@
 package com.effective.tms.user.task.service.impl;
 
+import com.effective.tms.user.profile.model.UserProfile;
 import com.effective.tms.user.task.model.Task;
 import com.effective.tms.user.task.repository.TaskRepository;
 import com.effective.tms.user.task.service.TaskService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -34,5 +36,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    @Override
+    public Collection<Task> findTasksByAuthor(UserProfile author) {
+        return taskRepository.findAllByAuthor(author);
+    }
+
+    @Override
+    public Collection<Task> findTasksByExecutor(UserProfile executor) {
+        return taskRepository.findAllByExecutor(executor);
     }
 }
