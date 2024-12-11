@@ -16,7 +16,9 @@ public class TaskToTaskResponseMapperImpl implements TaskToTaskResponseMapper {
                 task.getStatus(),
                 task.getPriority(),
                 task.getAuthor().getId(),
-                task.getExecutor().getId()
+                task.getExecutor().getId(),
+                task.getCreatedTimestamp(),
+                task.getModifiedTimestamp()
         );
     }
 }

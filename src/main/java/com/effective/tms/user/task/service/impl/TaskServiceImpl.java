@@ -5,6 +5,8 @@ import com.effective.tms.user.task.repository.TaskRepository;
 import com.effective.tms.user.task.service.TaskService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TaskServiceImpl implements TaskService {
 
@@ -17,5 +19,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task createTask(Task task) {
         return taskRepository.save(task);
+    }
+
+    @Override
+    public Task updateTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+    @Override
+    public Optional<Task> findTaskById(Long id) {
+        return taskRepository.findById(id);
     }
 }

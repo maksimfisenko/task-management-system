@@ -2,18 +2,18 @@ package com.effective.tms.user.task.web.model;
 
 import com.effective.tms.user.task.model.TaskPriority;
 import com.effective.tms.user.task.model.TaskStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-import java.time.Instant;
-
-public record TaskResponse(
+public record TaskEditRequest(
         Long id,
+        @NotBlank
+        @Size(max = 50)
         String title,
+        @Size(max = 200)
         String description,
         TaskStatus status,
         TaskPriority priority,
-        Long authorId,
-        Long executorId,
-        Instant createdTimestamp,
-        Instant modifiedTimestamp
+        Long executorId
 ) {
 }
