@@ -5,6 +5,8 @@ import com.effective.tms.user.profile.repository.UserProfileRepository;
 import com.effective.tms.user.profile.service.UserProfileService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 
@@ -27,5 +29,10 @@ public class UserProfileServiceImpl implements UserProfileService {
             throw new RuntimeException(errorMessage);
         }
         userProfileRepository.save(userProfile);
+    }
+
+    @Override
+    public Optional<UserProfile> findUserById(Long id) {
+        return userProfileRepository.findById(id);
     }
 }
