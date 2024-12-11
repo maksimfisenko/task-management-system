@@ -1,6 +1,7 @@
 package com.effective.tms.user.task.web;
 
 import com.effective.tms.user.task.facade.TaskAddFacade;
+import com.effective.tms.user.task.facade.TaskDeleteFacade;
 import com.effective.tms.user.task.facade.TaskEditFacade;
 import com.effective.tms.user.task.web.model.TaskAddRequest;
 import com.effective.tms.user.task.web.model.TaskEditRequest;
@@ -17,10 +18,14 @@ public class TaskController {
 
     private final TaskAddFacade taskAddFacade;
     private final TaskEditFacade taskEditFacade;
+    private final TaskDeleteFacade taskDeleteFacade;
 
-    public TaskController(TaskAddFacade taskAddFacade, TaskEditFacade taskEditFacade) {
+    public TaskController(TaskAddFacade taskAddFacade,
+                          TaskEditFacade taskEditFacade,
+                          TaskDeleteFacade taskDeleteFacade) {
         this.taskAddFacade = taskAddFacade;
         this.taskEditFacade = taskEditFacade;
+        this.taskDeleteFacade = taskDeleteFacade;
     }
 
     @PostMapping
@@ -32,5 +37,10 @@ public class TaskController {
     @PutMapping
     public TaskResponse editTask(@Valid @RequestBody TaskEditRequest taskEditRequest) {
         return taskEditFacade.editTask(taskEditRequest);
+    }
+
+    @DeleteMapping("/{taskId}")
+    public void deleteTask(@PathVariable Long taskId) {
+        taskDeleteFacade.deleteTask(taskId);
     }
 }
