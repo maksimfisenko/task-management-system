@@ -8,6 +8,11 @@ import com.effective.tms.user.task.web.model.TaskAddRequest;
 import com.effective.tms.user.task.web.model.TaskEditRequest;
 import com.effective.tms.user.task.web.model.TaskResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +58,23 @@ public class TaskController {
     }
 
     @GetMapping
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    @Operation(
+            security = { @SecurityRequirement(name = "bearer-key") },
+            summary = "Get all tasks of the user",
+            tags = {"user"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found user's tasks",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = TaskResponse.class))
+                            ),
+                    }
+            )
+    })
     public Collection<TaskResponse> findUserTasks() {
         return taskFindFacade.findTasks();
     }
