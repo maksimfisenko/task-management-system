@@ -1,5 +1,6 @@
 package com.effective.tms.user.task.facade.impl;
 
+import com.effective.tms.common.TmsException;
 import com.effective.tms.user.profile.api.service.UserProfileApiService;
 import com.effective.tms.user.profile.model.UserProfile;
 import com.effective.tms.user.task.facade.TaskEditFacade;
@@ -37,10 +38,10 @@ public class TaskEditFacadeImpl implements TaskEditFacade {
         UserProfile author = taskService
                 .findTaskById(taskEditRequest.id())
                 .map(Task::getAuthor)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new TmsException("Task not found"));
 
         if (!Objects.equals(actor.getId(), author.getId())) {
-            throw new RuntimeException("Actor is not author of the task");
+            throw new TmsException("Actor is not author of the task");
         }
 
         Task task = taskEditRequestToTaskMapper.map(taskEditRequest);

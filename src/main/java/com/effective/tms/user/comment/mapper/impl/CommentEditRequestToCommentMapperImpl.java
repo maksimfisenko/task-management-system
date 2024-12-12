@@ -1,5 +1,6 @@
 package com.effective.tms.user.comment.mapper.impl;
 
+import com.effective.tms.common.TmsException;
 import com.effective.tms.user.comment.mapper.CommentEditRequestToCommentMapper;
 import com.effective.tms.user.comment.model.Comment;
 import com.effective.tms.user.comment.service.CommentService;
@@ -28,10 +29,10 @@ public class CommentEditRequestToCommentMapperImpl implements CommentEditRequest
 
         Comment comment = commentService
                 .findById(commentEditRequest.id())
-                .orElseThrow(() -> new RuntimeException("No comment with such id"));
+                .orElseThrow(() -> new TmsException("No comment with such id"));
 
         if (!Objects.equals(currentUser.getId(), comment.getAuthor().getId())) {
-            throw new RuntimeException("Not right user");
+            throw new TmsException("Not right user");
         }
 
         comment.setMessage(commentEditRequest.message());

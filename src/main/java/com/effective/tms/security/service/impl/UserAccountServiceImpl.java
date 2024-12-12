@@ -1,5 +1,6 @@
 package com.effective.tms.security.service.impl;
 
+import com.effective.tms.common.TmsException;
 import com.effective.tms.security.model.UserAccount;
 import com.effective.tms.security.repository.UserAccountRepository;
 import com.effective.tms.security.service.UserAccountService;
@@ -21,7 +22,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount createUserAccount(UserAccount userAccount) {
         if (userAccountRepository.existsByUsername(userAccount.getUsername())) {
-            throw new RuntimeException("Account with this username already exists");
+            throw new TmsException("Account with this username already exists");
         }
         return userAccountRepository.save(userAccount);
     }

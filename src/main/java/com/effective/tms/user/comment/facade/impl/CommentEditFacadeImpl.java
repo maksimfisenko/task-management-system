@@ -1,5 +1,6 @@
 package com.effective.tms.user.comment.facade.impl;
 
+import com.effective.tms.common.TmsException;
 import com.effective.tms.user.comment.facade.CommentEditFacade;
 import com.effective.tms.user.comment.mapper.CommentEditRequestToCommentMapper;
 import com.effective.tms.user.comment.mapper.CommentToCommentResponseMapper;
@@ -36,10 +37,10 @@ public class CommentEditFacadeImpl implements CommentEditFacade {
         UserProfile author = commentService
                 .findById(commentEditRequest.id())
                 .map(Comment::getAuthor)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new TmsException("Comment not found"));
 
         if (!Objects.equals(actor.getId(), author.getId())) {
-            throw new RuntimeException("Actor is not author of the comment");
+            throw new TmsException("Actor is not author of the comment");
         }
 
         Comment comment = commentEditRequestToCommentMapper.map(commentEditRequest);

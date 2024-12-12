@@ -1,5 +1,6 @@
 package com.effective.tms.user.task.facade.impl;
 
+import com.effective.tms.common.TmsException;
 import com.effective.tms.security.api.model.CurrentUserApiModel;
 import com.effective.tms.security.api.service.IdentityApiService;
 import com.effective.tms.security.model.UserRole;
@@ -25,12 +26,12 @@ public class TaskDeleteFacadeImpl implements TaskDeleteFacade {
     public void deleteTask(Long id) {
         CurrentUserApiModel currentUser = identityApiService
                 .getCurrentUser()
-                .orElseThrow(() -> new RuntimeException("Current user is null"));
+                .orElseThrow(() -> new TmsException("Current user is null"));
 
         UserRole adminRole = identityApiService.getAdminRole();
 
         if (!currentUser.authorities().contains(adminRole)) {
-            throw new RuntimeException("Current user does not have permission to delete task");
+            throw new TmsException("Current user does not have permission to delete task");
         }
 
         taskService.deleteTask(id);

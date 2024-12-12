@@ -1,5 +1,6 @@
 package com.effective.tms.user.profile.service.impl;
 
+import com.effective.tms.common.TmsException;
 import com.effective.tms.user.profile.model.UserProfile;
 import com.effective.tms.user.profile.repository.UserProfileRepository;
 import com.effective.tms.user.profile.service.UserProfileService;
@@ -21,12 +22,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         if (userProfileRepository.existsById(userProfile.getId())) {
             String errorMessage = String.format("User profile with this id = %d already exists",
                     userProfile.getId());
-            throw new RuntimeException(errorMessage);
+            throw new TmsException(errorMessage);
         }
         if (userProfileRepository.existsByUsername(userProfile.getUsername())) {
             String errorMessage = String.format("User profile with this nickname = %s already exists",
                     userProfile.getUsername());
-            throw new RuntimeException(errorMessage);
+            throw new TmsException(errorMessage);
         }
         userProfileRepository.save(userProfile);
     }
