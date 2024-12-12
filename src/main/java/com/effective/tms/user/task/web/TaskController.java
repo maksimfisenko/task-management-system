@@ -7,6 +7,8 @@ import com.effective.tms.user.task.facade.TaskFindFacade;
 import com.effective.tms.user.task.web.model.TaskAddRequest;
 import com.effective.tms.user.task.web.model.TaskEditRequest;
 import com.effective.tms.user.task.web.model.TaskResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -51,6 +53,7 @@ public class TaskController {
     }
 
     @GetMapping
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     public Collection<TaskResponse> findUserTasks() {
         return taskFindFacade.findTasks();
     }
