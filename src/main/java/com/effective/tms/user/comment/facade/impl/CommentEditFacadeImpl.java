@@ -1,7 +1,6 @@
 package com.effective.tms.user.comment.facade.impl;
 
 import com.effective.tms.user.comment.facade.CommentEditFacade;
-import com.effective.tms.user.comment.mapper.CommentAddRequestToCommentMapper;
 import com.effective.tms.user.comment.mapper.CommentEditRequestToCommentMapper;
 import com.effective.tms.user.comment.mapper.CommentToCommentResponseMapper;
 import com.effective.tms.user.comment.model.Comment;
