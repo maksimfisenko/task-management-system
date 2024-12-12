@@ -1,9 +1,6 @@
 package com.effective.tms.user.task.web;
 
-import com.effective.tms.user.comment.facade.CommentFacade;
-import com.effective.tms.user.comment.web.model.CommentAddRequest;
-import com.effective.tms.user.comment.web.model.CommentEditRequest;
-import com.effective.tms.user.comment.web.model.CommentResponse;
+import com.effective.tms.user.comment.facade.CommentFindFacade;
 import com.effective.tms.user.task.facade.TaskAddFacade;
 import com.effective.tms.user.task.facade.TaskDeleteFacade;
 import com.effective.tms.user.task.facade.TaskEditFacade;
@@ -27,18 +24,15 @@ public class TaskController {
     private final TaskEditFacade taskEditFacade;
     private final TaskDeleteFacade taskDeleteFacade;
     private final TaskFindFacade taskFindFacade;
-    private final CommentFacade commentFacade;
 
     public TaskController(TaskAddFacade taskAddFacade,
                           TaskEditFacade taskEditFacade,
                           TaskDeleteFacade taskDeleteFacade,
-                          TaskFindFacade taskFindFacade,
-                          CommentFacade commentFacade) {
+                          TaskFindFacade taskFindFacade) {
         this.taskAddFacade = taskAddFacade;
         this.taskEditFacade = taskEditFacade;
         this.taskDeleteFacade = taskDeleteFacade;
         this.taskFindFacade = taskFindFacade;
-        this.commentFacade = commentFacade;
     }
 
     @PostMapping
@@ -60,28 +54,6 @@ public class TaskController {
     @GetMapping
     public Collection<TaskResponse> findUserTasks() {
         return taskFindFacade.findTasks();
-    }
-
-    @PostMapping("/{taskId}/comments")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CommentResponse addComment(@PathVariable Long taskId,
-                                      @Valid @RequestBody CommentAddRequest commentAddRequest) {
-        return commentFacade.addComment(taskId, commentAddRequest);
-    }
-
-    @GetMapping("/{taskId}/comments")
-    public Collection<CommentResponse> findTaskComments(@PathVariable Long taskId) {
-        return commentFacade.getCommentsByTaskId(taskId);
-    }
-
-    @PutMapping("/{taskId}/comments")
-    public CommentResponse editComment(@Valid @RequestBody CommentEditRequest commentEditRequest) {
-        return commentFacade.updateComment(commentEditRequest);
-    }
-
-    @DeleteMapping("/{taskId}/comments/{commentId}")
-    public void deleteComment(@PathVariable Long commentId) {
-        commentFacade.deleteComment(commentId);
     }
 
 }
