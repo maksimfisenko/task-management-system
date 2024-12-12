@@ -1,4 +1,12 @@
 package com.effective.tms.security.api.model;
 
-public record CurrentUserApiModel(Long userAccountId, String username) {
+import com.effective.tms.security.model.UserRole;
+
+import java.util.Set;
+
+public record CurrentUserApiModel(
+        Long userAccountId,
+        String username,
+        Set<UserRole> authorities
+) {
 }

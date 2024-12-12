@@ -3,11 +3,13 @@ package com.effective.tms.security.service.impl;
 import com.effective.tms.security.model.UserAccount;
 import com.effective.tms.security.repository.UserAccountRepository;
 import com.effective.tms.security.service.UserAccountService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserAccountServiceImpl implements UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
