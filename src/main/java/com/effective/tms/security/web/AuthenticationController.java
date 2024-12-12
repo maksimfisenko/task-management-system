@@ -20,7 +20,7 @@ public class AuthenticationController {
         this.authenticationFacade = authenticationFacade;
     }
 
-    @PostMapping("token")
+    @PostMapping("/token")
     public AccessToken getToken(@Valid @RequestBody LoginRequest loginRequest) {
         return authenticationFacade.authenticate(loginRequest);
     }

@@ -31,4 +31,12 @@ public class UserProfileApiServiceImpl implements UserProfileApiService {
         return userProfileService.findUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    @Override
+    public void createUserProfile(Long id, String username) {
+        UserProfile userProfile = new UserProfile();
+        userProfile.setId(id);
+        userProfile.setUsername(username);
+        userProfileService.createUserProfile(userProfile);
+    }
 }

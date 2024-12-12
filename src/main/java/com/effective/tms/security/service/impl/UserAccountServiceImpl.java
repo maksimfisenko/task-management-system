@@ -17,11 +17,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public void createUserAccount(UserAccount userAccount) {
+    public UserAccount createUserAccount(UserAccount userAccount) {
         if (userAccountRepository.existsByUsername(userAccount.getUsername())) {
             throw new RuntimeException("Account with this username already exists");
         }
-        userAccountRepository.save(userAccount);
+        return userAccountRepository.save(userAccount);
     }
 
     @Override
