@@ -26,6 +26,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userAccountService
                 .findUserByUsername(username)
                 .map(userAccountToUserMapper::map)
-                .orElseThrow(() -> new UsernameNotFoundException("Bad credentials"));
+                .orElseThrow(() -> new UsernameNotFoundException("User with given credentials doesn't exist"));
     }
 }

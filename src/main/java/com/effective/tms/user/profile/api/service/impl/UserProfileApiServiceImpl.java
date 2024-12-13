@@ -23,13 +23,17 @@ public class UserProfileApiServiceImpl implements UserProfileApiService {
         CurrentUserApiModel currentUserApiModel = identityApiService.getCurrentUser()
                 .orElseThrow(() -> new RuntimeException("User is not authorized"));
         return userProfileService.findUserById(currentUserApiModel.userAccountId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("User with id = %s not found",
+                                currentUserApiModel.userAccountId()))
+                );
     }
 
     @Override
     public UserProfile getUserProfileById(Long id) {
         return userProfileService.findUserById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("User with id = %s not found", id)));
     }
 
     @Override

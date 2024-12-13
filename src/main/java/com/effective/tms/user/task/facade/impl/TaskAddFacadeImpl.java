@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Transactional
 public class TaskAddFacadeImpl implements TaskAddFacade {
-
     private final IdentityApiService identityApiService;
     private final TaskService taskService;
     private final TaskAddRequestToTaskMapper taskAddRequestToTaskMapper;
     private final TaskToTaskResponseMapper taskToTaskResponseMapper;
 
-    public TaskAddFacadeImpl(IdentityApiService identityApiService, TaskService taskService,
+    public TaskAddFacadeImpl(IdentityApiService identityApiService,
+                             TaskService taskService,
                              TaskAddRequestToTaskMapper taskAddRequestToTaskMapper,
                              TaskToTaskResponseMapper taskToTaskResponseMapper) {
         this.identityApiService = identityApiService;
@@ -43,6 +43,7 @@ public class TaskAddFacadeImpl implements TaskAddFacade {
         if (!currentUser.authorities().contains(adminRole)) {
             throw new TmsException("Current user does not have permission to add task");
         }
+
         Task task = taskAddRequestToTaskMapper.map(taskAddRequest);
         Task savedTask = taskService.createTask(task);
         return taskToTaskResponseMapper.map(savedTask);

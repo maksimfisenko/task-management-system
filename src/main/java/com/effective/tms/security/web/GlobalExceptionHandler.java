@@ -7,11 +7,15 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.net.URI;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ProblemDetail handleRuntimeErrors(RuntimeException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problemDetail.setType(URI.create("localhost:8080/api/v1"));
+        return problemDetail;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -23,6 +27,8 @@ public class GlobalExceptionHandler {
                 .findFirst()
                 .orElseThrow();
         String errorMessage = String.format("%s %s", fieldError.getField(), fieldError.getDefaultMessage());
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
+        problemDetail.setType(URI.create("localhost:8080/api/v1"));
+        return problemDetail;
     }
 }

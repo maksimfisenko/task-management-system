@@ -1,5 +1,6 @@
 package com.effective.tms.user.task.service.impl;
 
+import com.effective.tms.common.TmsException;
 import com.effective.tms.user.profile.model.UserProfile;
 import com.effective.tms.user.task.model.Task;
 import com.effective.tms.user.task.repository.TaskRepository;
@@ -35,6 +36,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTask(Long id) {
+        if (!taskRepository.existsById(id)) {
+            throw new TmsException(String.format("Task with id = %s doesn't exist", id));
+        }
         taskRepository.deleteById(id);
     }
 
