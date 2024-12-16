@@ -16,9 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.*;
 
+import static com.effective.tms.common.constants.ApiConstants.*;
+
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/accounts")
+@RequestMapping(ACCOUNTS_MAPPING)
 public class UserAccountController {
 
     private final RegisterUserAccountFacade registerUserAccountFacade;
@@ -27,50 +29,33 @@ public class UserAccountController {
         this.registerUserAccountFacade = registerUserAccountFacade;
     }
 
-    @PostMapping("/register")
+    @PostMapping(ACCOUNT_REGISTER_MAPPING)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            security = { @SecurityRequirement(name = "bearer-key") },
-            summary = "Register user by username and password",
-            tags = {"User Accounts"}
+            security = {@SecurityRequirement(name = BEARER_KEY)},
+            summary = REGISTER_ACCOUNT_SUMMARY,
+            tags = {ACCOUNTS_TAG}
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
                     schema = @Schema(implementation = RegisterRequest.class),
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "username": "test@gmail.com",
-                                        "password": "test1234"
-                                    }
-                                    """
-                    )
+                    examples = @ExampleObject(value = REGISTER_ACCOUNT_REQUEST_BODY)
             )
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
-                    description = "Successfully registered new user account"
+                    responseCode = STATUS_CREATED,
+                    description = REGISTER_ACCOUNT_DESC_CREATED
             ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Not valid request",
+                    responseCode = STATUS_BAD_REQUEST,
+                    description = REGISTER_ACCOUNT_DESC_BAD_REQUEST,
                     content = @Content(
                             schema = @Schema(implementation = ProblemDetail.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                 "type": "localhost:8080/api/v1",
-                                                 "title": "Bad Request",
-                                                 "status": 400,
-                                                 "detail": "Account with this username already exists",
-                                                 "instance": "/api/v1/accounts/register"
-                                             }
-                                            """
-                            )
+                            examples = @ExampleObject(value = REGISTER_ACCOUNT_RESPONSE_BODY_BAD_REQUEST)
                     )
             ),
     })

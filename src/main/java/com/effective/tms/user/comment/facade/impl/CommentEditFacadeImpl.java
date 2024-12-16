@@ -1,6 +1,8 @@
 package com.effective.tms.user.comment.facade.impl;
 
-import com.effective.tms.common.TmsException;
+import com.effective.tms.common.exception.TmsException;
+import com.effective.tms.security.api.model.CurrentUserApiModel;
+import com.effective.tms.security.api.service.IdentityApiService;
 import com.effective.tms.user.comment.facade.CommentEditFacade;
 import com.effective.tms.user.comment.mapper.CommentEditRequestToCommentMapper;
 import com.effective.tms.user.comment.mapper.CommentToCommentResponseMapper;
@@ -8,24 +10,24 @@ import com.effective.tms.user.comment.model.Comment;
 import com.effective.tms.user.comment.service.CommentService;
 import com.effective.tms.user.comment.web.model.CommentEditRequest;
 import com.effective.tms.user.comment.web.model.CommentResponse;
-import com.effective.tms.user.profile.api.service.UserProfileApiService;
-import com.effective.tms.user.profile.model.UserProfile;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
+import static com.effective.tms.common.constants.FacadeConstants.*;
 
 @Component
+@Transactional
 public class CommentEditFacadeImpl implements CommentEditFacade {
-    private final UserProfileApiService userProfileApiService;
+    private final IdentityApiService identityApiService;
     private final CommentService commentService;
     private final CommentEditRequestToCommentMapper commentEditRequestToCommentMapper;
     private final CommentToCommentResponseMapper commentToCommentResponseMapper;
 
-    public CommentEditFacadeImpl(UserProfileApiService userProfileApiService,
+    public CommentEditFacadeImpl(IdentityApiService identityApiService,
                                  CommentService commentService,
                                  CommentEditRequestToCommentMapper commentEditRequestToCommentMapper,
                                  CommentToCommentResponseMapper commentToCommentResponseMapper) {
-        this.userProfileApiService = userProfileApiService;
+        this.identityApiService = identityApiService;
         this.commentService = commentService;
         this.commentEditRequestToCommentMapper = commentEditRequestToCommentMapper;
         this.commentToCommentResponseMapper = commentToCommentResponseMapper;
@@ -33,18 +35,25 @@ public class CommentEditFacadeImpl implements CommentEditFacade {
 
     @Override
     public CommentResponse editComment(CommentEditRequest commentEditRequest) {
-        UserProfile actor = userProfileApiService.getCurrentUserProfile();
-        UserProfile author = commentService
-                .findById(commentEditRequest.id())
-                .map(Comment::getAuthor)
-                .orElseThrow(() -> new TmsException("Comment not found"));
+        CurrentUserApiModel currentUser = identityApiService
+                .getCurrentUser()
+                .orElseThrow(() -> new TmsException(CANT_RETRIEVE_CUR_USER));
 
-        if (!Objects.equals(actor.getId(), author.getId())) {
-            throw new TmsException("Actor is not author of the comment");
+        Comment comment = commentService
+                .findById(commentEditRequest.id())
+                .orElseThrow(() -> new TmsException(String.format(CANT_FIND_COMMENT, commentEditRequest.id())));
+        boolean isCommentAuthor = comment.getAuthor().getId().equals(currentUser.userAccountId());
+
+        if (!isCommentAuthor) {
+            throw new TmsException(String.format(
+                    CANT_EDIT_COMMENT,
+                    currentUser.userAccountId(),
+                    commentEditRequest.id()
+            ));
         }
 
-        Comment comment = commentEditRequestToCommentMapper.map(commentEditRequest);
-        Comment updatedComment = commentService.updateComment(comment);
+        Comment mappedComment = commentEditRequestToCommentMapper.map(commentEditRequest);
+        Comment updatedComment = commentService.updateComment(mappedComment);
         return commentToCommentResponseMapper.map(updatedComment);
     }
 }

@@ -1,16 +1,16 @@
 package com.effective.tms.security.service.impl;
 
-import com.effective.tms.common.TmsException;
+import com.effective.tms.common.exception.TmsException;
 import com.effective.tms.security.model.UserAccount;
 import com.effective.tms.security.repository.UserAccountRepository;
 import com.effective.tms.security.service.UserAccountService;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.effective.tms.common.constants.ServiceConstants.ACCOUNT_ALREADY_EXISTS;
+
 @Service
-@Transactional
 public class UserAccountServiceImpl implements UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
@@ -22,7 +22,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccount createUserAccount(UserAccount userAccount) {
         if (userAccountRepository.existsByUsername(userAccount.getUsername())) {
-            throw new TmsException("Account with this username already exists");
+            throw new TmsException(String.format(ACCOUNT_ALREADY_EXISTS, userAccount.getUsername()));
         }
         return userAccountRepository.save(userAccount);
     }

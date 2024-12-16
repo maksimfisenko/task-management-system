@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.effective.tms.common.constants.ApiConstants.*;
+
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(AUTH_MAPPING)
 public class AuthenticationController {
 
     private final AuthenticationFacade authenticationFacade;
@@ -30,56 +32,33 @@ public class AuthenticationController {
 
     @PostMapping
     @Operation(
-            summary = "Authenticate user by username and password",
-            tags = {"Authentication"}
+            summary = AUTH_SUMMARY,
+            tags = {AUTH_TAG}
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
                     schema = @Schema(implementation = LoginRequest.class),
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "username": "test@gmail.com",
-                                        "password": "test1234"
-                                    }
-                                    """
-                    )
+                    examples = @ExampleObject(value = AUTH_REQUEST_BODY)
             )
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Successfully authenticated user",
+                    responseCode = STATUS_OK,
+                    description = AUTH_DESC_OK,
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                "token": "eyJraWQiOiJmNGY3OGJiO..."
-                                            }
-                                            """
-                            )
+                            examples = @ExampleObject(value = AUTH_RESPONSE_BODY_OK)
                     )
             ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Not valid request",
+                    responseCode = STATUS_BAD_REQUEST,
+                    description = AUTH_DESC_BAD_REQUEST,
                     content = @Content(
                             schema = @Schema(implementation = ProblemDetail.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                "type": "localhost:8080/api/v1",
-                                                "title": "Bad Request",
-                                                "status": 400,
-                                                "detail": "Bad credentials",
-                                                "instance": "/api/v1/auth"
-                                            }
-                                            """
-                            )
+                            examples = @ExampleObject(value = AUTH_RESPONSE_BODY_BAD_REQUEST)
                     )
             ),
     })

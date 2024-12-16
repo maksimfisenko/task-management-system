@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import static com.effective.tms.common.constants.ServiceConstants.USER_DOESNT_EXIST;
+
 @Service
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -26,6 +28,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userAccountService
                 .findUserByUsername(username)
                 .map(userAccountToUserMapper::map)
-                .orElseThrow(() -> new UsernameNotFoundException("User with given credentials doesn't exist"));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_DOESNT_EXIST, username)));
     }
 }

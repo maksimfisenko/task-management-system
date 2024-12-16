@@ -38,7 +38,7 @@ public class IdentityApiServiceImpl implements IdentityApiService {
 
         UserAccount userAccount = userAccountService
                 .findUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("error"));
+                .orElseThrow(() -> new RuntimeException("User account not found"));
 
         return Optional.of(new CurrentUserApiModel(userAccount.getId(), username, userAccount.getAuthorities()));
     }
@@ -47,6 +47,6 @@ public class IdentityApiServiceImpl implements IdentityApiService {
     public UserRole getAdminRole() {
         return userRoleService
                 .findAdminRole()
-                .orElseThrow(() -> new RuntimeException("error"));
+                .orElseThrow(() -> new RuntimeException("Admin role not found"));
     }
 }

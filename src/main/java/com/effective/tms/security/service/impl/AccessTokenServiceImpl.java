@@ -1,5 +1,6 @@
 package com.effective.tms.security.service.impl;
 
+import com.effective.tms.common.exception.TmsException;
 import com.effective.tms.security.service.AccessTokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+
+import static com.effective.tms.common.constants.ServiceConstants.*;
 
 @Service
 public class AccessTokenServiceImpl implements AccessTokenService {
@@ -29,13 +32,13 @@ public class AccessTokenServiceImpl implements AccessTokenService {
                 .of(authentication.getPrincipal())
                 .filter(UserDetails.class::isInstance)
                 .map(UserDetails.class::cast)
-                .orElseThrow(() -> new RuntimeException("Failed to retrieve UserDetails object from Authentication"));
+                .orElseThrow(() -> new TmsException(CANT_RETRIEVE_USER_DETAILS));
 
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
         JwtClaimsSet claimsSet = JwtClaimsSet
                 .builder()
-                .claim("scope", roles)
+                .claim(CLAIM_NAME, roles)
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(1, ChronoUnit.DAYS))
                 .subject(userDetails.getUsername())

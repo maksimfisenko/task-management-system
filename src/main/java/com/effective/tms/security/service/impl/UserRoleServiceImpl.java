@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.effective.tms.common.constants.ServiceConstants.ROLE_ADMIN;
+import static com.effective.tms.common.constants.ServiceConstants.ROLE_USER;
+
 @Service
 @Transactional
 public class UserRoleServiceImpl implements UserRoleService {
@@ -18,14 +21,13 @@ public class UserRoleServiceImpl implements UserRoleService {
         this.userRoleRepository = userRoleRepository;
     }
 
-
     @Override
     public Optional<UserRole> findUserRole() {
-        return userRoleRepository.findByAuthority("ROLE_USER");
+        return userRoleRepository.findByAuthority(ROLE_USER);
     }
 
     @Override
     public Optional<UserRole> findAdminRole() {
-        return userRoleRepository.findByAuthority("ROLE_ADMIN");
+        return userRoleRepository.findByAuthority(ROLE_ADMIN);
     }
 }

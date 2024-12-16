@@ -1,6 +1,6 @@
 package com.effective.tms.user.task.facade.impl;
 
-import com.effective.tms.common.TmsException;
+import com.effective.tms.common.exception.TmsException;
 import com.effective.tms.user.profile.api.service.UserProfileApiService;
 import com.effective.tms.user.profile.model.UserProfile;
 import com.effective.tms.user.task.facade.TaskEditFacade;
@@ -13,6 +13,9 @@ import com.effective.tms.user.task.web.model.TaskResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+
+import static com.effective.tms.common.constants.FacadeConstants.CANT_EDIT_TASK;
+import static com.effective.tms.common.constants.FacadeConstants.CANT_FIND_TASK;
 
 @Component
 public class TaskEditFacadeImpl implements TaskEditFacade {
@@ -38,10 +41,10 @@ public class TaskEditFacadeImpl implements TaskEditFacade {
         UserProfile author = taskService
                 .findTaskById(taskEditRequest.id())
                 .map(Task::getAuthor)
-                .orElseThrow(() -> new TmsException("Task not found"));
+                .orElseThrow(() -> new TmsException(String.format(CANT_FIND_TASK, taskEditRequest.id())));
 
         if (!Objects.equals(actor.getId(), author.getId())) {
-            throw new TmsException("Actor is not author of the task");
+            throw new TmsException(String.format(CANT_EDIT_TASK, actor.getId(), taskEditRequest.id()));
         }
 
         Task task = taskEditRequestToTaskMapper.map(taskEditRequest);

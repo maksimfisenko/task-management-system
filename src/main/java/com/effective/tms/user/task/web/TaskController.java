@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+import static com.effective.tms.common.constants.ApiConstants.*;
+
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/tasks")
+@RequestMapping(TASKS_MAPPING)
 public class TaskController {
 
     private final TaskAddFacade taskAddFacade;
@@ -47,92 +49,48 @@ public class TaskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
-            security = { @SecurityRequirement(name = "bearer-key") },
-            summary = "Create a new task",
-            tags = {"Tasks"}
+            security = {@SecurityRequirement(name = BEARER_KEY)},
+            summary = ADD_TASK_SUMMARY,
+            tags = {TASKS_TAG}
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
                     schema = @Schema(implementation = TaskAddRequest.class),
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    examples = @ExampleObject(
-                            value = """
-                                    {
-                                        "title": "Write unit tests",
-                                        "description": "Unit tests need to be written",
-                                        "status": "WAITING",
-                                        "priority": "HIGH",
-                                        "executorId": 1
-                                    }
-                                    """
-                    )
+                    examples = @ExampleObject(value = ADD_TASK_REQUEST_BODY)
             )
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
-                    description = "Successfully created new task",
+                    responseCode = STATUS_CREATED,
+                    description = ADD_TASK_DESC_OK,
                     content = @Content(
                             schema = @Schema(implementation = TaskResponse.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                "id": 8,
-                                                "title": "Write unit tests",
-                                                "description": "Unit tests need to be written",
-                                                "status": "WAITING",
-                                                "priority": "HIGH",
-                                                "authorId": 6,
-                                                "executorId": 1,
-                                                "createdTimestamp": "2024-12-13T15:49:00.219090300Z",
-                                                "modifiedTimestamp": "2024-12-13T15:49:00.219090300Z"
-                                            }
-                                            """
-                            )
+                            examples = @ExampleObject(value = ADD_TASK_RESPONSE_BODY_OK)
                     )
             ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Not valid request",
+                    responseCode = STATUS_BAD_REQUEST,
+                    description = ADD_TASK_DESC_BAD_REQUEST,
                     content = @Content(
                             schema = @Schema(implementation = ProblemDetail.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                "type": "localhost:8080/api/v1",
-                                                "title": "Bad Request",
-                                                "status": 400,
-                                                "detail": "title must not be blank",
-                                                "instance": "/api/v1/tasks"
-                                            }
-                                            """
-                            )
+                            examples = @ExampleObject(value = ADD_TASK_RESPONSE_BODY_BAD_REQUEST)
                     )
             ),
             @ApiResponse(
-                    responseCode = "401",
-                    description = "Current user does not have permission to create a new task",
+                    responseCode = STATUS_UNAUTHORIZED,
+                    description = ADD_TASK_DESC_UNAUTHORIZED,
                     content = @Content(
                             schema = @Schema(implementation = ProblemDetail.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                 "type": "localhost:8080/api/v1",
-                                                 "title": "Bad Request",
-                                                 "status": 400,
-                                                 "detail": "Current user does not have permission to add task",
-                                                 "instance": "/api/v1/tasks"
-                                             }
-                                            """
-                            )
+                            examples = @ExampleObject(value = ADD_TASK_RESPONSE_BODY_UNAUTHORIZED)
                     )
             )
     })
-    public TaskResponse createTask(@Valid @RequestBody TaskAddRequest taskAddRequest) {
+    public TaskResponse addTask(@Valid @RequestBody TaskAddRequest taskAddRequest) {
         return taskAddFacade.createTask(taskAddRequest);
     }
 
@@ -141,75 +99,48 @@ public class TaskController {
         return taskEditFacade.editTask(taskEditRequest);
     }
 
-    @DeleteMapping("/{taskId}")
+    @DeleteMapping(DELETE_TASK_MAPPING)
     @Operation(
-            security = { @SecurityRequirement(name = "bearer-key") },
-            summary = "Delete task by task ID",
-            tags = {"Tasks"}
+            security = {@SecurityRequirement(name = BEARER_KEY)},
+            summary = DELETE_TASK_SUMMARY,
+            tags = {TASKS_TAG}
     )
     @Parameter(
-            name = "taskId",
-            description = "ID of the task to delete",
-            schema = @Schema(type = "Long"),
-            examples = @ExampleObject(value = "1")
+            name = TASK_ID_PARAM,
+            description = TASK_ID_PARAM_DESC,
+            schema = @Schema(type = TASK_ID_PARAM_TYPE),
+            examples = @ExampleObject(value = TASK_ID_PARAM_VALUE)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully deleted task"),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad task ID given",
+                    responseCode = STATUS_OK,
+                    description = DELETE_TASK_DESC_OK
+            ),
+            @ApiResponse(
+                    responseCode = STATUS_BAD_REQUEST,
+                    description = DELETE_TASK_DESC_BAD_REQUEST,
                     content = @Content(
                             schema = @Schema(implementation = ProblemDetail.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                "type": "localhost:8080/api/v1",
-                                                "title": "Bad Request",
-                                                "status": 400,
-                                                "detail": "Method parameter 'taskId': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: \\"rr\\"",
-                                                "instance": "/api/v1/tasks/rr"
-                                            }
-                                            """
-                            )
+                            examples = @ExampleObject(value = DELETE_TASK_RESPONSE_BODY_BAD_REQUEST)
                     )
             ),
             @ApiResponse(
-                    responseCode = "401",
-                    description = "User doesn't have authorities to delete task",
+                    responseCode = STATUS_UNAUTHORIZED,
+                    description = DELETE_TASK_DESC_UNAUTHORIZED,
                     content = @Content(
                             schema = @Schema(implementation = ProblemDetail.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                 "type": "localhost:8080/api/v1",
-                                                 "title": "Bad Request",
-                                                 "status": 400,
-                                                 "detail": "Current user does not have permission to delete task",
-                                                 "instance": "/api/v1/tasks"
-                                             }
-                                            """
-                            )
+                            examples = @ExampleObject(value = DELETE_TASK_RESPONSE_BODY_UNAUTHORIZED)
                     )
             ),
             @ApiResponse(
-                    responseCode = "500",
-                    description = "Failed to delete task with given id",
+                    responseCode = STATUS_INTERNAL_ERROR,
+                    description = DELETE_TASK_DESC_INTERNAL_ERROR,
                     content = @Content(
                             schema = @Schema(implementation = ProblemDetail.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            {
-                                                "type": "localhost:8080/api/v1",
-                                                "title": "Bad Request",
-                                                "status": 400,
-                                                "detail": "Task with id = -1 doesn't exist",
-                                                "instance": "/api/v1/tasks/-1"
-                                            }
-                                            """
-                            )
+                            examples = @ExampleObject(value = DELETE_TASK_RESPONSE_BODY_INTERNAL_ERROR)
                     )
             ),
     })
@@ -219,48 +150,18 @@ public class TaskController {
 
     @GetMapping
     @Operation(
-            security = { @SecurityRequirement(name = "bearer-key") },
-            summary = "Get all tasks of the current user",
-            tags = {"Tasks"}
+            security = {@SecurityRequirement(name = BEARER_KEY)},
+            summary = GET_TASKS_SUMMARY,
+            tags = {TASKS_TAG}
     )
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Returned all current user's tasks",
+                    responseCode = STATUS_OK,
+                    description = GET_TASKS_DESC_OK,
                     content = @Content(
-                            schema = @Schema(
-                                    type = "array",
-                                    implementation = TaskResponse.class
-                            ),
+                            schema = @Schema(type = ARRAY_TYPE, implementation = TaskResponse.class),
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = """
-                                            [
-                                                 {
-                                                     "id": 7,
-                                                     "title": "Task 1",
-                                                     "description": "Description 1",
-                                                     "status": "WAITING",
-                                                     "priority": "HIGH",
-                                                     "authorId": 6,
-                                                     "executorId": 1,
-                                                     "createdTimestamp": "2024-12-13T15:38:54.809545Z",
-                                                     "modifiedTimestamp": "2024-12-13T15:38:54.809545Z"
-                                                 },
-                                                 {
-                                                     "id": 8,
-                                                     "title": "Task 2",
-                                                     "description": "Description 2",
-                                                     "status": "COMPLETED",
-                                                     "priority": "LOW",
-                                                     "authorId": 6,
-                                                     "executorId": 2,
-                                                     "createdTimestamp": "2024-12-13T15:49:00.219090Z",
-                                                     "modifiedTimestamp": "2024-12-13T15:49:00.219090Z"
-                                                 }
-                                             ]
-                                            """
-                            )
+                            examples = @ExampleObject(value = GET_TASKS_RESPONSE_BODY_OK)
                     )
             )
     })

@@ -1,4 +1,4 @@
-package com.effective.tms.security.mapper;
+package com.effective.tms.common.mapper;
 
 public interface Mapper<D, S> {
     D map(S source);

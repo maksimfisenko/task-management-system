@@ -1,6 +1,6 @@
 package com.effective.tms.user.task.service.impl;
 
-import com.effective.tms.common.TmsException;
+import com.effective.tms.common.exception.TmsException;
 import com.effective.tms.user.profile.model.UserProfile;
 import com.effective.tms.user.task.model.Task;
 import com.effective.tms.user.task.repository.TaskRepository;
@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
+
+import static com.effective.tms.common.constants.ServiceConstants.TASK_DOESNT_EXIST;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -37,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long id) {
         if (!taskRepository.existsById(id)) {
-            throw new TmsException(String.format("Task with id = %s doesn't exist", id));
+            throw new TmsException(String.format(TASK_DOESNT_EXIST, id));
         }
         taskRepository.deleteById(id);
     }

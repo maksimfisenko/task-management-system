@@ -1,6 +1,6 @@
 package com.effective.tms.user.comment.mapper.impl;
 
-import com.effective.tms.common.TmsException;
+import com.effective.tms.common.exception.TmsException;
 import com.effective.tms.user.comment.mapper.CommentEditRequestToCommentMapper;
 import com.effective.tms.user.comment.model.Comment;
 import com.effective.tms.user.comment.service.CommentService;

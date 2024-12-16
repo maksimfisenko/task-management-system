@@ -1,12 +1,15 @@
 package com.effective.tms.user.profile.service.impl;
 
-import com.effective.tms.common.TmsException;
+import com.effective.tms.common.exception.TmsException;
 import com.effective.tms.user.profile.model.UserProfile;
 import com.effective.tms.user.profile.repository.UserProfileRepository;
 import com.effective.tms.user.profile.service.UserProfileService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.effective.tms.common.constants.ServiceConstants.USER_PROFILE_BY_ID_ALREADY_EXISTS;
+import static com.effective.tms.common.constants.ServiceConstants.USER_PROFILE_BY_NAME_ALREADY_EXISTS;
 
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
@@ -20,14 +23,10 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public void createUserProfile(UserProfile userProfile) {
         if (userProfileRepository.existsById(userProfile.getId())) {
-            String errorMessage = String.format("User profile with this id = %d already exists",
-                    userProfile.getId());
-            throw new TmsException(errorMessage);
+            throw new TmsException(String.format(USER_PROFILE_BY_ID_ALREADY_EXISTS, userProfile.getId()));
         }
         if (userProfileRepository.existsByUsername(userProfile.getUsername())) {
-            String errorMessage = String.format("User profile with this nickname = %s already exists",
-                    userProfile.getUsername());
-            throw new TmsException(errorMessage);
+            throw new TmsException(String.format(USER_PROFILE_BY_NAME_ALREADY_EXISTS, userProfile.getUsername()));
         }
         userProfileRepository.save(userProfile);
     }
