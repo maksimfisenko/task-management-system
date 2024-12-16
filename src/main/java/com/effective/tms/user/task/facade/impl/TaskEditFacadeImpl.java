@@ -10,6 +10,7 @@ import com.effective.tms.user.task.model.Task;
 import com.effective.tms.user.task.service.TaskService;
 import com.effective.tms.user.task.web.model.TaskEditRequest;
 import com.effective.tms.user.task.web.model.TaskResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -18,6 +19,7 @@ import static com.effective.tms.common.constants.FacadeConstants.CANT_EDIT_TASK;
 import static com.effective.tms.common.constants.FacadeConstants.CANT_FIND_TASK;
 
 @Component
+@Transactional
 public class TaskEditFacadeImpl implements TaskEditFacade {
 
     private final TaskService taskService;

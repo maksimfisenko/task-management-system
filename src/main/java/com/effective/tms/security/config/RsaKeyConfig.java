@@ -1,5 +1,6 @@
 package com.effective.tms.security.config;
 
+import com.effective.tms.common.exception.TmsException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +11,11 @@ import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 public class RsaKeyConfig {
+
+    private RsaKeyConfig() {
+        throw new TmsException("Init config");
+    }
+
     @Bean
     public static RsaKeys generateRsaKey() {
         KeyPair keyPair;

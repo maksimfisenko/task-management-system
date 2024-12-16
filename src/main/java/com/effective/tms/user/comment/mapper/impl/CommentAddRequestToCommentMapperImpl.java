@@ -2,7 +2,6 @@ package com.effective.tms.user.comment.mapper.impl;
 
 import com.effective.tms.user.comment.mapper.CommentAddRequestToCommentMapper;
 import com.effective.tms.user.comment.model.Comment;
-import com.effective.tms.user.comment.service.CommentService;
 import com.effective.tms.user.comment.web.model.CommentAddRequest;
 import com.effective.tms.user.profile.api.service.UserProfileApiService;
 import com.effective.tms.user.profile.model.UserProfile;

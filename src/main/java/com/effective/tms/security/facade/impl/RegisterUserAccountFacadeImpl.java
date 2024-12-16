@@ -6,9 +6,11 @@ import com.effective.tms.security.model.UserAccount;
 import com.effective.tms.security.service.UserAccountService;
 import com.effective.tms.security.web.model.RegisterRequest;
 import com.effective.tms.user.profile.api.service.UserProfileApiService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 @Component
+@Transactional
 public class RegisterUserAccountFacadeImpl implements RegisterUserAccountFacade {
 
     private final UserProfileApiService userProfileApiService;

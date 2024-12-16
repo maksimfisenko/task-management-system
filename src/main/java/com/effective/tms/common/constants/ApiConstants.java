@@ -1,6 +1,12 @@
 package com.effective.tms.common.constants;
 
+import com.effective.tms.common.exception.TmsException;
+
 public final class ApiConstants {
+
+    private ApiConstants() {
+        throw new TmsException("Init constants");
+    }
 
     public static final String BEARER_KEY = "bearer-key";
 
@@ -13,6 +19,7 @@ public final class ApiConstants {
 
     public static final String ACCOUNT_REGISTER_MAPPING = "/register";
     public static final String DELETE_TASK_MAPPING = "/{taskId}";
+    public static final String DELETE_COMMENT_MAPPING = "/{commentId}";
 
     public static final String STATUS_OK = "200";
     public static final String STATUS_CREATED = "201";
@@ -30,12 +37,21 @@ public final class ApiConstants {
     public static final String ADD_TASK_SUMMARY = "Add a new task";
     public static final String ADD_COMMENT_SUMMARY = "Add a comment to the task";
     public static final String DELETE_TASK_SUMMARY = "Delete task by task ID";
+    public static final String EDIT_TASK_SUMMARY = "Edit task";
     public static final String GET_TASKS_SUMMARY = "Get all tasks of the current user";
+    public static final String GET_COMMENTS_SUMMARY = "Get all comments of the task";
+    public static final String EDIT_COMMENT_SUMMARY = "Edit comment";
+    public static final String DELETE_COMMENT_SUMMARY = "Delete comment by comment ID";
 
     public static final String TASK_ID_PARAM = "taskId";
-    public static final String TASK_ID_PARAM_DESC = "ID of the task to delete";
+    public static final String TASK_ID_PARAM_DESC = "ID of the task";
     public static final String TASK_ID_PARAM_TYPE = "Long";
     public static final String TASK_ID_PARAM_VALUE = "1";
+
+    public static final String COMMENT_ID_PARAM = "commentId";
+    public static final String COMMENT_ID_PARAM_DESC = "ID of the comment";
+    public static final String COMMENT_ID_PARAM_TYPE = "Long";
+    public static final String COMMENT_ID_PARAM_VALUE = "1";
 
     public static final String AUTH_REQUEST_BODY = """
                                     {
@@ -69,7 +85,7 @@ public final class ApiConstants {
                                                  "type": "localhost:8080/api/v1",
                                                  "title": "Bad Request",
                                                  "status": 400,
-                                                 "detail": "Account with this username already exists",
+                                                 "detail": "Account with username = test1234@gmail.com already exists",
                                                  "instance": "/api/v1/accounts/register"
                                              }
                                             """;
@@ -149,7 +165,7 @@ public final class ApiConstants {
                                                  "type": "localhost:8080/api/v1",
                                                  "title": "Bad Request",
                                                  "status": 400,
-                                                 "detail": "Current user does not have permission to delete task",
+                                                 "detail": "User with id = 5 doesn't have permission to delete a task",
                                                  "instance": "/api/v1/tasks"
                                              }
                                             """;
@@ -188,21 +204,121 @@ public final class ApiConstants {
                                                  }
                                              ]
                                             """;
+    public static final String GET_COMMENTS_RESPONSE_BODY_OK = """
+            [
+                {
+                    "id": 6,
+                    "message": "comment from admin",
+                    "taskId": 9,
+                    "authorId": 6,
+                    "createdTimestamp": "2024-12-13T18:16:43.752331Z",
+                    "modifiedTimestamp": "2024-12-13T18:16:43.752331Z"
+                },
+                {
+                    "id": 9,
+                    "message": "comment from admin",
+                    "taskId": 9,
+                    "authorId": 6,
+                    "createdTimestamp": "2024-12-16T00:57:58.867255Z",
+                    "modifiedTimestamp": "2024-12-16T00:57:58.867255Z"
+                }
+            ]
+            """;
+    public static final String GET_COMMENTS_RESPONSE_BODY_BAD_REQUEST = """
+            {
+                "type": "localhost:8080/api/v1",
+                "title": "Bad Request",
+                "status": 400,
+                "detail": "Can't find task with id = 22",
+                "instance": "/api/v1/tasks/22/comments"
+            }
+            """;
+    public static final String EDIT_COMMENT_REQUEST_BODY = """
+            {
+                "id": 9,
+                "message": "edited message"
+            }
+            """;
+    public static final String EDIT_COMMENT_RESPONSE_BODY_OK = """
+            {
+                "id": 9,
+                "message": "edited message",
+                "taskId": 9,
+                "authorId": 6,
+                "createdTimestamp": "2024-12-16T00:57:58.867255Z",
+                "modifiedTimestamp": "2024-12-16T00:57:58.867255Z"
+            }
+            """;
+    public static final String EDIT_COMMENT_RESPONSE_BODY_BAD_REQUEST = """
+            {
+                "type": "localhost:8080/api/v1",
+                "title": "Bad Request",
+                "status": 400,
+                "detail": "Can't find comment with id = 15",
+                "instance": "/api/v1/tasks/10/comments"
+            }
+            """;
+    public static final String DELETE_COMMENT_RESPONSE_BODY_BAD_REQUEST = """
+            {
+                "type": "localhost:8080/api/v1",
+                "title": "Bad Request",
+                "status": 400,
+                "detail": "Can't find comment with id = 6",
+                "instance": "/api/v1/tasks/10/comments/6"
+            }
+            """;
+    public static final String EDIT_TASK_REQUEST_BODY = """
+            {
+                "id": 14,
+                "title": "edited_title",
+                "description": "edited_description",
+                "status": "WAITING",
+                "priority": "LOW",
+                "executorId": 1
+            }
+            """;
+    public static final String EDIT_TASK_RESPONSE_BODY_OK = """
+            {
+                "id": 13,
+                "title": "edited_title",
+                "description": "edited_description",
+                "status": "WAITING",
+                "priority": "LOW",
+                "executorId": 1
+            }
+            """;
+    public static final String EDIT_TASK_RESPONSE_BODY_BAD_REQUEST = """
+            {
+                "type": "localhost:8080/api/v1",
+                "title": "Bad Request",
+                "status": 400,
+                "detail": "Can't find task with id = 16",
+                "instance": "/api/v1/tasks"
+            }
+            """;
 
     public static final String AUTH_DESC_OK = "Successfully authenticated user";
-    public static final String AUTH_DESC_BAD_REQUEST = "Bad credentials";
+    public static final String AUTH_DESC_BAD_REQUEST = "Failed to authenticate user";
     public static final String REGISTER_ACCOUNT_DESC_CREATED= "Successfully registered new user account";
-    public static final String REGISTER_ACCOUNT_DESC_BAD_REQUEST = "Not valid request";
+    public static final String REGISTER_ACCOUNT_DESC_BAD_REQUEST = "Failed to create user from given credentials";
     public static final String ADD_COMMENT_DESC_OK = "Successfully added new comment to the task";
     public static final String ADD_COMMENT_DESC_BAD_REQUEST = "Not valid request";
     public static final String ADD_TASK_DESC_OK = "Successfully added a new task";
     public static final String ADD_TASK_DESC_BAD_REQUEST = "Not valid request";
     public static final String ADD_TASK_DESC_UNAUTHORIZED = "Current user does not have permission to add a new task";
     public static final String DELETE_TASK_DESC_OK = "Successfully deleted task";
-    public static final String DELETE_TASK_DESC_BAD_REQUEST = "Successfully deleted task";
-    public static final String DELETE_TASK_DESC_UNAUTHORIZED = "User doesn't have authorities to delete task";
+    public static final String DELETE_TASK_DESC_BAD_REQUEST = "Failed to delete task from given credentials";
+    public static final String DELETE_TASK_DESC_UNAUTHORIZED = "Current user does not have permission to delete task";
     public static final String DELETE_TASK_DESC_INTERNAL_ERROR = "Failed to delete task with given id";
-    public static final String GET_TASKS_DESC_OK = "Returned all current user's tasks";
+    public static final String GET_TASKS_DESC_OK = "Successfully returned all current user's tasks";
+    public static final String GET_COMMENTS_DESC_OK = "Successfully returned all task's comments";
+    public static final String GET_COMMENTS_DESC_BAD_REQUEST = "Invalid task ID given";
+    public static final String EDIT_COMMENT_DESC_OK = "Successfully edited the comment";
+    public static final String EDIT_COMMENT_DESC_BAD_REQUEST = "Invalid comment ID given";
+    public static final String DELETE_COMMENT_DESC_OK = "Successfully deleted the comment";
+    public static final String DELETE_COMMENT_DESC_BAD_REQUEST = "Invalid comment ID given";
+    public static final String EDIT_TASK_DESC_OK = "Successfully edited the task";
+    public static final String EDIT_TASK_DESC_BAD_REQUEST = "Invalid task request body given";
 
     public static final String ARRAY_TYPE = "array";
 }

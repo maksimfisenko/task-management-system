@@ -30,7 +30,7 @@ public class TaskEditRequestToTaskMapperImpl implements TaskEditRequestToTaskMap
         currentTask.setPriority(taskEditRequest.priority());
 
         UserProfile newExecutor = userProfileApiService
-                .getUserProfileById(taskEditRequest.id());
+                .getUserProfileById(taskEditRequest.executorId());
 
         currentTask.setExecutor(newExecutor);
 

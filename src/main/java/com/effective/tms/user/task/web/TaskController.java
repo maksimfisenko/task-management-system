@@ -95,6 +95,39 @@ public class TaskController {
     }
 
     @PutMapping
+    @Operation(
+            security = {@SecurityRequirement(name = BEARER_KEY)},
+            summary = EDIT_TASK_SUMMARY,
+            tags = {TASKS_TAG}
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = TaskEditRequest.class),
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = @ExampleObject(value = EDIT_TASK_REQUEST_BODY)
+            )
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = STATUS_OK,
+                    description = EDIT_TASK_DESC_OK,
+                    content = @Content(
+                            schema = @Schema(implementation = TaskResponse.class),
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(value = EDIT_TASK_RESPONSE_BODY_OK)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = STATUS_BAD_REQUEST,
+                    description = EDIT_TASK_DESC_BAD_REQUEST,
+                    content = @Content(
+                            schema = @Schema(implementation = ProblemDetail.class),
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(value = EDIT_TASK_RESPONSE_BODY_BAD_REQUEST)
+                    )
+            )
+    })
     public TaskResponse editTask(@Valid @RequestBody TaskEditRequest taskEditRequest) {
         return taskEditFacade.editTask(taskEditRequest);
     }
@@ -168,5 +201,4 @@ public class TaskController {
     public Collection<TaskResponse> findUserTasks() {
         return taskFindFacade.findTasks();
     }
-
 }

@@ -4,6 +4,7 @@ import com.effective.tms.security.facade.AuthenticationFacade;
 import com.effective.tms.security.service.AccessTokenService;
 import com.effective.tms.security.web.model.AccessToken;
 import com.effective.tms.security.web.model.LoginRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Component
+@Transactional
 public class AuthenticationFacadeImpl implements AuthenticationFacade {
 
     private final AuthenticationManager authenticationManager;
